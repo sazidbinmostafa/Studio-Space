@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/shared/Navbar";
 import ThemeProvider from "@/providers/ThemeProvider";
+import Footer from "@/components/shared/Footer";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -18,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Studo Space",
-  description: "Get your studio space",
+  title: "StudoSpace",
+  description: "Create Without Limits - Discover and Book Inspiring Studios for Your Creative Projects",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -45,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <footer>
-
+            <Footer />
           </footer>
         </ThemeProvider>
       </body>
