@@ -21,20 +21,20 @@ const slides = [
     description:
       "From photography to podcasts, find a space that makes every project possible.",
     image:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1800&q=85",
-  },
-  {
+    "https://images.unsplash.com/photo-1782274265689-4f10a91d4abb?w=1800&q=85",
+},
+{
     title: "Your space. Their next masterpiece.",
     description:
-      "Share your creative space with a community of makers and earn from your studio.",
+    "Share your creative space with a community of makers and earn from your studio.",
     image:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1800&q=85",
+    "https://images.unsplash.com/photo-1664817550969-5e76adc4a3fe?w=1800&q=85",
   },
 ];
 
 export default function HeroSection() {
   return (
-    <section className="relative h-[620px] min-h-[520px] w-full overflow-hidden">
+    <section className="relative h-155 min-h-130 w-full overflow-hidden">
       <Swiper
         modules={[Autoplay, EffectFade, Pagination]}
         effect="fade"
