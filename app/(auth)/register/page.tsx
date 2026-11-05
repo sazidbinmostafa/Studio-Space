@@ -1,5 +1,6 @@
 "use client";
 
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -22,12 +23,12 @@ function Register() {
   };
 
   const handleGoogleRegister = () => {
-    console.log("Google registration will be connected later.");
+    console.log("Google registration");
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-      <div className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-primary/5 p-8 shadow-lg">
 
         <div className="mb-6 text-center">
 
@@ -108,7 +109,7 @@ function Register() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-primary"
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? <EyeOffIcon size={20}/> : <EyeIcon size={20}/>}
               </button>
             </div>
 
@@ -157,7 +158,7 @@ function Register() {
         </button>
 
       </div>
-    </main>
+    </div>
   );
 }
 export default Register;

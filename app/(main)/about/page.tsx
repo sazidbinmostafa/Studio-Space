@@ -43,7 +43,7 @@ const categories = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-24 sm:py-32">
         <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -237,6 +237,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

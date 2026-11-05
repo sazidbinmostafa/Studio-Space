@@ -65,7 +65,7 @@ const hostSteps = [
 
 function HowItWorks() {
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.14),transparent_60%)]" />
@@ -249,7 +249,7 @@ function HowItWorks() {
           </Link>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 

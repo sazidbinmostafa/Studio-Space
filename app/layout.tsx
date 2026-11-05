@@ -39,15 +39,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <header>
-            <Navbar />
-          </header>
-          <main>
-            {children}
-          </main>
-          <footer>
-            <Footer />
-          </footer>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

@@ -3,7 +3,7 @@ import AddStudioForm from "@/components/form/AddStudioForm";
 
 function AddStudioPage() {
   return (
-    <main className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="mx-auto max-w-4xl">
         <div className="mb-10">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
@@ -22,7 +22,7 @@ function AddStudioPage() {
 
         <AddStudioForm />
       </div>
-    </main>
+    </div>
   );
 }
 
