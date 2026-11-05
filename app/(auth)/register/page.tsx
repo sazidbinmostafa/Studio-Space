@@ -1,5 +1,7 @@
 "use client";
-
+import { signUp, useSession } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -7,8 +9,9 @@ import { FcGoogle } from "react-icons/fc";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-  const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -20,6 +23,23 @@ function Register() {
     };
 
     console.log("Registration data:", userData);
+
+    try {
+      const response = await signUp.email({
+        name: userData.name as string,
+        email: userData.email as string,
+        password: userData.password as string,
+      });
+
+      if (response.error) {
+        toast.error(response.error.message || "Registration failed. Please try again.");
+      } else {
+        toast.success("Account created successfully!");
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
   };
 
   const handleGoogleRegister = () => {
@@ -98,9 +118,9 @@ function Register() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a password"
                 required
-                minLength={6}
-                pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}"
-                title="Password must contain at least 6 characters, including one uppercase and one lowercase letter, and one digit."
+                minLength={8}
+                pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+                title="Password must contain at least 8 characters, including one uppercase, one lowercase letter, and one digit."
                 className="w-full rounded-xl border border-border bg-card px-4 py-3 pr-20 text-sm outline-none transition placeholder:text-mist focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
 
@@ -109,12 +129,12 @@ function Register() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-primary"
               >
-                {showPassword ? <EyeOffIcon size={20}/> : <EyeIcon size={20}/>}
+                {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
               </button>
             </div>
 
             <p className="mt-2 text-xs text-mist-500">
-              At least 6 characters, with one uppercase, one lowercase letter, and one digit.
+              At least 8 characters, with one uppercase, one lowercase letter, and one digit.
             </p>
           </div>
 

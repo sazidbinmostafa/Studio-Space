@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/shared/Navbar";
 import ThemeProvider from "@/providers/ThemeProvider";
 import Footer from "@/components/shared/Footer";
+import { Toaster} from "sonner";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
+          <Toaster position="top-center"/>
           <Navbar />
           <main>{children}</main>
           <Footer />
