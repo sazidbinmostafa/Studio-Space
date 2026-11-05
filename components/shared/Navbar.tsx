@@ -60,7 +60,7 @@ function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");

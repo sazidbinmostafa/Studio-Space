@@ -92,6 +92,7 @@ function Footer() {
                                     <Link
                                         href={link.href}
                                         className="text-sm text-muted-foreground transition hover:text-primary"
+                                        onClick={()=> window.scrollTo({ top: 0, behavior: "smooth" })}
                                     >
                                         {link.label}
                                     </Link>
@@ -109,6 +110,7 @@ function Footer() {
                                     <Link
                                         href="/studios"
                                         className="text-sm text-muted-foreground transition hover:text-primary"
+                                        onClick={()=> window.scrollTo({ top: 0, behavior: "smooth" })}
                                     >
                                         {category}
                                     </Link>
