@@ -1,14 +1,17 @@
 "use client";
-
+import { signIn, useSession } from "@/lib/auth-client";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -18,7 +21,21 @@ function Login() {
       password: formData.get("password"),
     };
 
-    console.log("Login data:", userData);
+    try {
+          const response = await signIn.email({
+            email: userData.email as string,
+            password: userData.password as string,
+          });
+    
+          if (response.error) {
+            toast.error(response.error.message || "Login failed. Please try again.");
+          } else {
+            toast.success("Logged in successfully!");
+            router.push("/dashboard");
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+        }
   };
 
   const handleGoogleLogin = () => {
