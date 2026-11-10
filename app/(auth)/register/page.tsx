@@ -1,15 +1,32 @@
 "use client";
-import { signUp, useSession } from "@/lib/auth-client";
+import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import Loading from "@/app/loading";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const { data: session, isPending } = useSession();
+
+  useEffect(() => {
+    if (isPending) return;
+
+    if (!session) {
+      router.replace("/register");
+    } else {
+      router.replace("/dashboard");
+    }
+  }, [session, isPending, router]);
+
+  if (isPending) {
+    return <Loading />;
+  }
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,8 +59,19 @@ function Register() {
     }
   };
 
-  const handleGoogleRegister = () => {
-    console.log("Google registration");
+  const handleGoogleRegister = async () => {
+    try {
+      const response = await signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+
+      if (response.error) {
+        toast.error(response.error.message || "Google login failed.");
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   return (

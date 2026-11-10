@@ -1,6 +1,6 @@
 "use client";
-
-import { useState } from "react";
+import { signOut, useSession } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -21,6 +21,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Loading from "@/app/loading";
+import { toast } from "sonner";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -60,7 +62,9 @@ function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isLoggedIn = false;
+  const { data: session, isPending } = useSession();
+
+  const isLoggedIn = !!session && !isPending;
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -71,9 +75,21 @@ function Navbar() {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  const handleLogout = () => {
-    router.push("/");
-    router.refresh();
+  const handleLogout = async () => {
+    try {
+      const response = await signOut();
+
+      if (response.error) {
+        toast.error("Logout failed. Please try again.");
+        return;
+      }
+
+      toast.success("Logged out successfully!");
+      router.push("/login");
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong!");
+    }
   };
 
   return (

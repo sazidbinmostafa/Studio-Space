@@ -1,8 +1,8 @@
-import React from 'react'
+import { Spinner } from '@/components/ui/spinner'
 
 function Loading() {
     return (
-        <div>loading</div>
+        <Spinner className="mx-auto my-8" />
     )
 }
 

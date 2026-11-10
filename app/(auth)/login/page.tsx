@@ -1,15 +1,34 @@
 "use client";
-import { signIn, useSession } from "@/lib/auth-client";
+import Loading from "@/app/loading";
+import { authClient, signIn, useSession } from "@/lib/auth-client";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const { data: session, isPending } = useSession();
+
+  useEffect(() => {
+    if (isPending) return;
+
+    if (!session) {
+      router.replace("/login");
+    } else {
+      router.replace("/dashboard");
+    }
+  }, [session, isPending, router]);
+
+  if (isPending) {
+    return <Loading />;
+  }
+
+
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,24 +41,35 @@ function Login() {
     };
 
     try {
-          const response = await signIn.email({
-            email: userData.email as string,
-            password: userData.password as string,
-          });
-    
-          if (response.error) {
-            toast.error(response.error.message || "Login failed. Please try again.");
-          } else {
-            toast.success("Logged in successfully!");
-            router.push("/dashboard");
-          }
-        } catch (error) {
-          console.error("Unexpected error:", error);
-        }
+      const response = await signIn.email({
+        email: userData.email as string,
+        password: userData.password as string,
+      });
+
+      if (response.error) {
+        toast.error(response.error.message || "Login failed. Please try again.");
+      } else {
+        toast.success("Logged in successfully!");
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login");
+  const handleGoogleLogin = async () => {
+    try {
+      const response = await signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+
+      if (response.error) {
+        toast.error(response.error.message || "Google login failed.");
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   return (
