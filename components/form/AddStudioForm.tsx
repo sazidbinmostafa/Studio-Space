@@ -26,15 +26,28 @@ const amenities = [
 ];
 
 export default function AddStudioForm() {
+
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
 
-    const studioData = Object.fromEntries(formData.entries());
+    const studioData = {
+      title: formData.get("title") as string,
+      category: formData.get("category") as string,
+      overview: formData.get("overview") as string,
+      hourlyRate: Number(formData.get("hourlyRate")),
+      securityDeposit: Number(formData.get("securityDeposit")),
+      location: formData.get("location") as string,
+      maxCapacity: Number(formData.get("maxCapacity")),
+      imageUrl: formData.get("imageUrl") as string,
+      amenities: formData.getAll("amenities") as string[],
+    };
 
     console.log("Studio Information:", studioData);
   }
+
 
   const fieldClass =
     "h-12 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-mist-foreground";
