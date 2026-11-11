@@ -1,4 +1,3 @@
-
 "use client";
 
 import { type FormEvent } from "react";
@@ -11,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const amenities = [
   "Professional Lighting",
@@ -27,12 +27,14 @@ const amenities = [
 
 export default function AddStudioForm() {
 
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  // Handle form submission \\
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const form = event.currentTarget;
     const formData = new FormData(event.currentTarget);
 
+    // Studio Data \\
     const studioData = {
       title: formData.get("title") as string,
       category: formData.get("category") as string,
@@ -45,12 +47,38 @@ export default function AddStudioForm() {
       amenities: formData.getAll("amenities") as string[],
     };
 
-    console.log("Studio Information:", studioData);
+    // Trying to POST \\ 
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/add-studio`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(studioData),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to add studio.");
+      }
+
+      toast.success("Studio added successfully!");
+      form.reset();
+    } catch (error) {
+      console.error("Error adding studio:", error);
+
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong."
+      );
+    }
   }
 
-
-  const fieldClass =
-    "h-12 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-mist-foreground";
+  // Filed Class (CSS) \\
+  const fieldClass = "h-12 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-mist-foreground";
 
   return (
     <Card className="border-border/70 shadow-sm">
@@ -141,7 +169,7 @@ export default function AddStudioForm() {
                   name="securityDeposit"
                   type="number"
                   min="0"
-                  placeholder="500"
+                  placeholder="2000"
                   className={fieldClass}
                   required
                 />
