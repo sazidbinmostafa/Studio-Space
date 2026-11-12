@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/shared/Navbar";
 import ThemeProvider from "@/providers/ThemeProvider";
 import Footer from "@/components/shared/Footer";
 import { Toaster} from "sonner";
+import Navbar from "@/components/shared/Navbar";
 
 const inter = Inter({ 
   subsets: ['latin'], 
