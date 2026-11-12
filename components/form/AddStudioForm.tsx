@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent } from "react";
+import { ChangeEvent, useState, type FormEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import Image from "next/image";
+import { ImagePlus, Loader2 } from "lucide-react";
 
 const amenities = [
   "Professional Lighting",
@@ -26,6 +28,55 @@ const amenities = [
 ];
 
 export default function AddStudioForm() {
+
+  const [imageUrl, setImageUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Handle Image Upload \\
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setIsUploading(true);
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload-image`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Image upload failed.");
+      }
+
+      setImageUrl(data.imageUrl);
+      toast.success("Image uploaded successfully!");
+
+    }
+    catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Upload failed."
+      );
+    }
+    finally {
+      setIsUploading(false);
+    }
+
+  }
 
   // Handle form submission \\
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -43,7 +94,7 @@ export default function AddStudioForm() {
       securityDeposit: Number(formData.get("securityDeposit")),
       location: formData.get("location") as string,
       maxCapacity: Number(formData.get("maxCapacity")),
-      imageUrl: formData.get("imageUrl") as string,
+      imageUrl,
       amenities: formData.getAll("amenities") as string[],
     };
 
@@ -67,6 +118,7 @@ export default function AddStudioForm() {
       }
 
       toast.success("Studio added successfully!");
+      setImageUrl("")
       form.reset();
     } catch (error) {
       console.error("Error adding studio:", error);
@@ -207,17 +259,67 @@ export default function AddStudioForm() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="imageUrl">Studio Image URL</Label>
-              <Input
-                id="imageUrl"
-                name="imageUrl"
-                type="url"
-                placeholder="https://example.com/studio-image.jpg"
-                className={fieldClass}
-                required
-              />
+
+            <div className="space-y-3">
+              <Label htmlFor="image" className="text-sm font-semibold">
+                Studio Image
+              </Label>
+
+              <div className="flex flex-col md:flex-row gap-4 ">
+                {/* Image Upload */}
+                <div className="flex flex-1 min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted/20 p-5 text-center transition-colors hover:border-primary/60">
+                  <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <ImagePlus className="size-6" />
+                  </div>
+
+                  <div className="mb-4 space-y-1">
+                    <p className="text-sm font-semibold">
+                      Upload your studio image
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      PNG, JPG or WEBP
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Recommended: 1200 × 800
+                    </p>
+                  </div>
+
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    className="h-auto w-full cursor-pointer border-border bg-background text-xs file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-2 file:text-xs file:font-medium file:text-primary-foreground hover:file:bg-primary/90"
+                  />
+
+                  {isUploading && (
+                    <div className="mt-3 flex items-center gap-2 text-sm text-primary">
+                      <Loader2 className="size-4 animate-spin" />
+                      Uploading image...
+                    </div>
+                  )}
+                </div>
+
+                {/* Image Preview */}
+                {imageUrl ?
+                    <div className="flex flex-1 min-h-64 flex-col overflow-hidden rounded-2xl border border-border">
+                      <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl">
+                        <Image
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          src={imageUrl}
+                          alt="Studio Image Preview"
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>:
+                  <></>}
+              </div>
+
+              <input type="hidden" name="imageUrl" value={imageUrl} />
             </div>
+
           </section>
 
           <div className="h-px bg-border" />
